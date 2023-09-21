@@ -13,11 +13,12 @@ const ModalA = ({ isOpenModalA, setIsOpenModalA, OpenModalB }) => {
     setIsOpenModalA(true);
   }
 
-//   fetch data from api
-useEffect(()=>{
-    fetch("https://contact.mediusware.com/api-doc/?format=openapi").then(res=> res.json())
-    .then(data=> console.log(data));
-},[])
+  //   fetch data from api
+  useEffect(() => {
+    fetch("https://contact.mediusware.com/api/contacts/")
+      .then((res) => res.json())
+      .then((data) => setData(data.results));
+  }, []);
 
   return (
     <>
@@ -54,10 +55,25 @@ useEffect(()=>{
                     All Contacts Modal
                   </Dialog.Title>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We’ve sent
-                      you an email with all of the details of your order.
-                    </p>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th scope="col">Phone Number</th>
+                          <th scope="col">Country</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data && data.map((item)=> {
+                            return (<>
+                            <tr>
+                                <td>{item?.phone}</td>
+                                <td>{item?.country?.name}</td>
+                            </tr>
+                            
+                            </>)
+                        })}
+                      </tbody>
+                    </table>
                   </div>
 
                   <div className="mt-4 space-x-1">

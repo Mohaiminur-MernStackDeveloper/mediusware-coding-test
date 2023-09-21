@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 
 const ModalB = ({ isOpenModalB, setIsOpenModalB, OpenModalA }) => {
+  const [data, setData] = useState(null);
+
   function closeModal() {
     setIsOpenModalB(false);
   }
+
+  useEffect(() => {
+    fetch(
+      "https://contact.mediusware.com/api/country-contacts/United%20States/"
+    )
+      .then((res) => res.json())
+      .then((data) => setData(data.results));
+  }, []);
 
   return (
     <>
@@ -42,10 +52,27 @@ const ModalB = ({ isOpenModalB, setIsOpenModalB, OpenModalA }) => {
                     US Contact Modal
                   </Dialog.Title>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We’ve sent
-                      you an email with all of the details of your order.
-                    </p>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th scope="col">Phone Number</th>
+                          <th scope="col">Country</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data &&
+                          data.map((item) => {
+                            return (
+                              <>
+                                <tr>
+                                  <td>{item?.phone}</td>
+                                  <td>{item?.country?.name}</td>
+                                </tr>
+                              </>
+                            );
+                          })}
+                      </tbody>
+                    </table>
                   </div>
 
                   <div className="mt-4 space-x-1">
